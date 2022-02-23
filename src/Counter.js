@@ -1,4 +1,17 @@
 import React, { Component } from 'react';
+
+/*
+const increment = (state, props) => {
+  const { max, step } = props;
+  if (state.count >= max) {
+    return;
+    // Will work, but should really be more explicit here and return the value unchanged
+    // return { count: state.count };
+  }
+  return { count: state.count + step };
+};
+*/
+
 class Counter extends Component {
   constructor(props) {
     super(props);
@@ -12,7 +25,25 @@ class Counter extends Component {
   }
 
   increment() {
-    this.setState({ count: this.state.count + 1 });
+    // N.B this,setState is asynchronous, Also this.setState will accept a function as an argument
+    // and a second argument which is a callback function
+    // this.setState(increment);
+    this.setState(
+      (state, props) => {
+        const { max, step } = props;
+        if (state.count >= max) {
+          return;
+          // Will work, but should really be more explicit here and return the value unchanged
+          // return { count: state.count };
+        }
+        return { count: state.count + step };
+      }, 
+      () => { 
+        console.log('After!', this.state);
+      }
+    );
+
+    console.log('Before!', this.state);
   }
 
   decrement() {
