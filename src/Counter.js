@@ -12,12 +12,27 @@ const increment = (state, props) => {
 };
 */
 
+// N.B. dont use this function in production as there are undesireable edge cases
+const getStateFromLocalStorage = () => {
+  const storage = localStorage.getItem('counterState');
+  console.log(storage);
+  if (storage) {
+    return JSON.parse(storage);
+  }
+  return { count: 0 };
+};
+
+const storeStateInLocalStorage = (state) => {
+  localStorage.setItem('counterState', JSON.stringify(state));
+  console.log(localStorage);
+}
+
+document.title = 'Hello';
+
 class Counter extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      count: 0,
-    };
+    this.state = getStateFromLocalStorage();
 
     this.increment = this.increment.bind(this);
     this.decrement = this.decrement.bind(this);
@@ -38,20 +53,38 @@ class Counter extends Component {
         }
         return { count: state.count + step };
       }, 
+      // Callback function will not except any arguments
+      () => storeStateInLocalStorage(this.state)
+      /*
       () => { 
-        console.log('After!', this.state);
+        localStorage.setItem('counterState', JSON.stringify(this.state));
+        console.log(localStorage);
       }
+      */
+
     );
 
     console.log('Before!', this.state);
   }
 
   decrement() {
-    this.setState({ count: this.state.count - 1 });
+    this.setState(
+      (state, props) => {
+        const { max, step } = props;
+        if (state.count <= 0) {
+          return;
+          // Will work, but should really be more explicit here and return the value unchanged
+          // return { count: state.count };
+        }
+        return { count: state.count - step };
+      }, 
+      // Callback function will not except any arguments
+      () => storeStateInLocalStorage(this.state)
+    );
   }
 
   reset() {
-    this.setState({ count: 0 });
+    this.setState({ count: 0 }, () => storeStateInLocalStorage(this.state));
   }
 
   render() {
