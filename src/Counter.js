@@ -26,17 +26,19 @@ const storeStateInLocalStorage = (state) => {
   localStorage.setItem('counterState', JSON.stringify(state));
   console.log(localStorage);
 }
-
-document.title = 'Hello';
-
 class Counter extends Component {
   constructor(props) {
     super(props);
     this.state = getStateFromLocalStorage();
 
+    this.updateDocumentTitle = this.updateDocumentTitle.bind(this);
     this.increment = this.increment.bind(this);
     this.decrement = this.decrement.bind(this);
     this.reset = this.reset.bind(this);
+  }
+
+  updateDocumentTitle() {
+    document.title = `Count: ${this.state.count}`;
   }
 
   increment() {
@@ -54,7 +56,7 @@ class Counter extends Component {
         return { count: state.count + step };
       }, 
       // Callback function will not except any arguments
-      () => storeStateInLocalStorage(this.state)
+      this.updateDocumentTitle
       /*
       () => { 
         localStorage.setItem('counterState', JSON.stringify(this.state));
@@ -79,12 +81,12 @@ class Counter extends Component {
         return { count: state.count - step };
       }, 
       // Callback function will not except any arguments
-      () => storeStateInLocalStorage(this.state)
+      this.updateDocumentTitle
     );
   }
 
   reset() {
-    this.setState({ count: 0 }, () => storeStateInLocalStorage(this.state));
+    this.setState({ count: 0 }, this.updateDocumentTitle);
   }
 
   render() {
