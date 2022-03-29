@@ -1,17 +1,5 @@
 import React, { Component } from 'react';
 
-/*
-const increment = (state, props) => {
-  const { max, step } = props;
-  if (state.count >= max) {
-    return;
-    // Will work, but should really be more explicit here and return the value unchanged
-    // return { count: state.count };
-  }
-  return { count: state.count + step };
-};
-*/
-
 // N.B. dont use this function in production as there are undesireable edge cases
 const getStateFromLocalStorage = () => {
   const storage = localStorage.getItem('counterState');
@@ -26,83 +14,31 @@ const storeStateInLocalStorage = (state) => {
   localStorage.setItem('counterState', JSON.stringify(state));
   console.log(localStorage);
 }
-class Counter extends Component {
-  constructor(props) {
-    super(props);
-    this.state = getStateFromLocalStorage();
+const Counter = ({ max, step }) => {
+  const [count, setCount] = React.useState(0);
 
-    this.updateDocumentTitle = this.updateDocumentTitle.bind(this);
-    this.increment = this.increment.bind(this);
-    this.decrement = this.decrement.bind(this);
-    this.reset = this.reset.bind(this);
+  // const increment = () => setCount(count + 1);
+
+  const increment = () => {
+    setCount(c => {
+      if (c >= max) return c;
+      return c + step;
+    });
   }
 
-  updateDocumentTitle() {
-    document.title = `Count: ${this.state.count}`;
-  }
+  const decrement = () => setCount(count - 1);
+  const reset = () => setCount(0);
 
-  increment() {
-    // N.B this,setState is asynchronous, Also this.setState will accept a function as an argument
-    // and a second argument which is a callback function
-    // this.setState(increment);
-    this.setState(
-      (state, props) => {
-        const { max, step } = props;
-        if (state.count >= max) {
-          return;
-          // Will work, but should really be more explicit here and return the value unchanged
-          // return { count: state.count };
-        }
-        return { count: state.count + step };
-      }, 
-      // Callback function will not except any arguments
-      this.updateDocumentTitle
-      /*
-      () => { 
-        localStorage.setItem('counterState', JSON.stringify(this.state));
-        console.log(localStorage);
-      }
-      */
-
-    );
-
-    console.log('Before!', this.state);
-  }
-
-  decrement() {
-    this.setState(
-      (state, props) => {
-        const { max, step } = props;
-        if (state.count <= 0) {
-          return;
-          // Will work, but should really be more explicit here and return the value unchanged
-          // return { count: state.count };
-        }
-        return { count: state.count - step };
-      }, 
-      // Callback function will not except any arguments
-      this.updateDocumentTitle
-    );
-  }
-
-  reset() {
-    this.setState({ count: 0 }, this.updateDocumentTitle);
-  }
-
-  render() {
-    const { count } = this.state;
-
-    return (
-      <main className="Counter">
-        <p className="count">{count}</p>
-        <section className="controls">
-          <button onClick={this.increment}>Increment</button>
-          <button onClick={this.decrement}>Decrement</button>
-          <button onClick={this.reset}>Reset</button>
-        </section>
-      </main>
-    );
-  }
+  return (
+    <main className="Counter">
+      <p className="count">{count}</p>
+      <section className="controls">
+        <button onClick={increment}>Increment</button>
+        <button onClick={decrement}>Decrement</button>
+        <button onClick={reset}>Reset</button>
+      </section>
+    </main>
+  );
 }
 
 export default Counter;
