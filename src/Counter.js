@@ -16,7 +16,7 @@ const storeStateInLocalStorage = count => {
 };
 
 const Counter = ({ max, step }) => {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(getStateFromLocalStorage());
 
   // const increment = () => setCount(count + 1);
 
@@ -37,6 +37,10 @@ const Counter = ({ max, step }) => {
   // An array of dependancies , only run when sometimes I care about changes, similar to componentDidMount but there are other 
   // use cases when it need to run more than once
   // exhaustive depths - Eslint plugin 
+
+  useEffect(() => {
+    storeStateInLocalStorage(count);
+  }, [count])
 
   return (
     <main className="Counter">
