@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // N.B. dont use this function in production as there are undesireable edge cases
 const getStateFromLocalStorage = () => {
@@ -15,7 +15,7 @@ const storeStateInLocalStorage = (state) => {
   console.log(localStorage);
 }
 const Counter = ({ max, step }) => {
-  const [count, setCount] = React.useState(0);
+  const [count, setCount] = useState(0);
 
   // const increment = () => setCount(count + 1);
 
@@ -28,6 +28,14 @@ const Counter = ({ max, step }) => {
 
   const decrement = () => setCount(count - 1);
   const reset = () => setCount(0);
+
+  // useEffect 
+  useEffect(() => {
+    document.title = `Counter: ${count}`;
+  }, [count]); 
+  // An array of dependancies , only run when sometimes I care about changes, similar to componentDidMount but there are other 
+  // use cases when it need to run more than once
+  // exhaustive depths - Eslint plugin 
 
   return (
     <main className="Counter">
