@@ -5,15 +5,16 @@ const getStateFromLocalStorage = () => {
   const storage = localStorage.getItem('counterState');
   console.log(storage);
   if (storage) {
-    return JSON.parse(storage);
+    return JSON.parse(storage).count;
   }
   return { count: 0 };
 };
 
-const storeStateInLocalStorage = (state) => {
-  localStorage.setItem('counterState', JSON.stringify(state));
+const storeStateInLocalStorage = count => {
+  localStorage.setItem('counterState', JSON.stringify({ count }));
   console.log(localStorage);
-}
+};
+
 const Counter = ({ max, step }) => {
   const [count, setCount] = useState(0);
 
