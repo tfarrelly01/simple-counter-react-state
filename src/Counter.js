@@ -59,9 +59,11 @@ const Counter = ({ max, step }) => {
 
   // useEffect 
   useEffect(() => {
-    setTimeout(() => {
+    const id = setInterval(() => {
       console.log(`Count: ${count}`);
     }, 3000);
+
+    return () => clearInterval(id);
   }, [count]); 
   // An array of dependancies , only run when sometimes I care about changes, similar to componentDidMount but there are other 
   // use cases when it need to run more than once
